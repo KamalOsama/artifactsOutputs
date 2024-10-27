@@ -32,7 +32,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: dist-folder
-          path: |             # the folders or files that i would like to download after the job
+          path:
+            | # the folders or files that i would like to download after the job
             dist
             package.json
 
@@ -40,5 +41,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy
-        run: echo "Deploying..."
+      - name: Get dist folder artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-folder
+      - name: print content
+        run: ls
