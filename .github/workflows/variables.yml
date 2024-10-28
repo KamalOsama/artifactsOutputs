@@ -4,6 +4,8 @@ on: workflow_dispatch
 
 env:
   MY_NAME: "Kamal"
+  MY_PASSWORD: ${{secrets.MY_PASSWORD}}
+  MY_API_KEY: ${{secrets.MY_API_KEY}}
 
 jobs:
   printVariables:
@@ -11,3 +13,10 @@ jobs:
     steps:
       - name: print
         run: echo "${{env.MY_NAME}}"
+
+  printVariablesInOtherEnv:
+    runs-on: ubuntu-latest
+    environment: testing  # this job will use testing environment created on github
+    steps:
+      - name: print
+        run: echo "Here the password is not the same as the printVariables job while both having the same name"
