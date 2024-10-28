@@ -8,9 +8,15 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm # directory to cache
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         run: npm ci
       - name: Lint code
@@ -22,10 +28,16 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      extracted-script-file: ${{ steps.publish.outputs.file }}
+      extracted-script-file: ${{ steps.publish.outputs.fileName }}
+
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         run: npm ci
       - name: Build website
@@ -34,22 +46,23 @@ jobs:
         id: publish # id is needed to access this step output
         run: |
           file="example.txt"
-          echo "file=$file" >> $GITHUB_OUTPUT
+          echo "fileName=$file" >> $GITHUB_OUTPUT
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dist-folder
           path:
-            | # the folders or files that i would like to download after the job
+            | # the folders or files that i would like to upload after the job
             dist
             package.json
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
       - name: Get dist folder artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3 # access the uploaded artifacts inthis job
         with:
           name: dist-folder
       - name: print content
