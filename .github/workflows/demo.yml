@@ -31,8 +31,10 @@ jobs:
       - name: Build website
         run: npm run build
       - name: Publish JS filename
-        id: publish
-        run: find dist/assets/*.js -type f -execdir echo 'file={}' >> $GITHUB_OUTPUT ';'
+        id: publish                   # id is needed to access this step output
+        run: |
+          file="example.txt"
+          echo "$file" >> $GITHUB_OUTPUT
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -53,4 +55,4 @@ jobs:
       - name: print content
         run: ls
       - name: Output files
-        run: echo "${{ needs.build.outputs.extracted-script-file }}"  # The job Must have a need (ex. needs: build)
+        run: echo "${{ needs.build.outputs.extracted-script-file }}" # The job Must have a need (ex. needs: build)
