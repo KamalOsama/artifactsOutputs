@@ -62,7 +62,7 @@ jobs:
 
     steps:
       - name: Get dist folder artifact
-        uses: actions/download-artifact@v3 # access the uploaded artifacts inthis job
+        uses: actions/download-artifact@v3 # access the uploaded artifacts in this job
         with:
           name: dist-folder
       - name: print content

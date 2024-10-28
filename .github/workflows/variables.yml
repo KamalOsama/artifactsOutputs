@@ -1,0 +1,13 @@
+name: Variables and Secrets
+
+on: workflow_dispatch
+
+env:
+  MY_NAME: "Kamal"
+
+jobs:
+  printVariables:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print
+        run: echo "${{env.MY_NAME}}"
